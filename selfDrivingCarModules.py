@@ -18,3 +18,46 @@ from sklearn import metrics
 class Sdc:
     def __init__(self):
         self.text = ""
+
+    @staticmethod
+    def import_simulated_images(data_path, csv_file, limit=0):
+        csv_lines = []
+
+        with open(csv_file) as csv_file:
+            reader = csv.reader(csv_file)
+
+            for csv_line in reader:
+                csv_lines.append(csv_line)
+
+        center_images = []
+        steering_angles = []
+        exception_count = 0
+
+        limit_counter = 0
+
+        for line_segments in csv_lines:
+            # print(line_segments)
+
+            try:
+                stearing_angle = float(line_segments[3])
+                steering_angles.append(stearing_angle)
+
+                image_file = data_path + line_segments[0]
+                # use this line in case this code runs on the server
+                # (center_image_path, center_image_filename) = os.path.split(center_image_file)
+
+                image = cv2.imread(image_file)
+                center_images.append(image)
+            except ValueError:
+                if (exception_count > 1):
+                    raise Exception("The CSV file is likely corrupted")
+
+                exception_count += 1
+
+            if (limit != 0):
+                limit_counter += 1
+
+                if (limit_counter > limit):
+                    break
+
+        return (np.asarray(center_images), np.asarray(steering_angles))
