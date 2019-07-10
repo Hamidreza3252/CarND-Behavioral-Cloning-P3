@@ -20,7 +20,7 @@ class Sdc:
         self.text = ""
 
     @staticmethod
-    def import_simulated_images(data_path, csv_file, limit=0):
+    def import_simulated_images(data_path, csv_file, limit=0, augment_data=False):
         csv_lines = []
 
         with open(csv_file) as csv_file:
@@ -39,8 +39,8 @@ class Sdc:
             # print(line_segments)
 
             try:
-                stearing_angle = float(line_segments[3])
-                steering_angles.append(stearing_angle)
+                steering_angle = float(line_segments[3])
+                steering_angles.append(steering_angle)
 
                 image_file = data_path + line_segments[0]
                 # use this line in case this code runs on the server
@@ -48,6 +48,11 @@ class Sdc:
 
                 image = cv2.imread(image_file)
                 center_images.append(image)
+
+                if (augment_data):
+                    steering_angles.append(steering_angle * -1.0)
+                    center_images.append(cv2.flip(image, 1))
+
             except ValueError:
                 if (exception_count > 1):
                     raise Exception("The CSV file is likely corrupted")
@@ -61,3 +66,7 @@ class Sdc:
                     break
 
         return (np.asarray(center_images), np.asarray(steering_angles))
+
+    @staticmethod
+    def dummy():
+        raise NotImplementedError
