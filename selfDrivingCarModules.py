@@ -16,6 +16,11 @@ from sklearn import metrics
 
 
 class Sdc:
+
+    class DataGenerator():
+        def __init__(self):
+            self.xx = "hamid"
+
     def __init__(self):
         self.text = ""
 
@@ -30,6 +35,8 @@ class Sdc:
                 csv_lines.append(csv_line)
 
         center_images = []
+        left_images = []
+        right_images = []
         steering_angles = []
         exception_count = 0
 
