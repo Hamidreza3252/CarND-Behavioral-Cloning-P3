@@ -1,5 +1,6 @@
 import keras
 import numpy as np
+import cv2
 
 
 class DataGenerator4Classification(keras.utils.Sequence):
@@ -50,7 +51,8 @@ class DataGenerator4Classification(keras.utils.Sequence):
 
         # Generate indexes of the batch
         from_index = index * self.batch_size
-        indexes = self.indexes[from_index:from_index + self.batch_size]
+        to_index = min(from_index + self.batch_size, len(self.labels))
+        indexes = self.indexes[from_index:to_index]
         # indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
 
         # Find list of IDs
@@ -99,7 +101,7 @@ class DataGenerator4Classification(keras.utils.Sequence):
 
 
 class DataGenerator4Regression(keras.utils.Sequence):
-    def __init__(self, list_ids, values, batch_size=32, dim=(32, 32, 3), n_channels=1, shuffle=True):
+    def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True):
         """
 
         Initialization:
@@ -107,21 +109,21 @@ class DataGenerator4Regression(keras.utils.Sequence):
         :param list_ids:
         :param values:
         :param batch_size:
-        :param dim:
+        :param dims:
         :param n_channels:
         :param shuffle:
         """
 
-        self.dim = dim
+        self.indexes = None
+        self.shuffle = True
+
+        self.dims = dims
         self.batch_size = batch_size
         self.values = values
         self.list_ids = list_ids
         self.n_channels = n_channels
         self.shuffle = shuffle
         self.on_epoch_end()
-
-        self.indexes = None
-        self.shuffle = True
 
     def __len__(self):
 
@@ -143,12 +145,16 @@ class DataGenerator4Regression(keras.utils.Sequence):
         """
 
         # Generate indexes of the batch
-        from_index = index * self.batch_size
-        indexes = self.indexes[from_index:from_index + self.batch_size]
-        # indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        # from_index = index * self.batch_size
+        # to_index = min(from_index + self.batch_size, len(self.values))
+        # indexes = self.indexes[from_index:to_index]
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
 
         # Find list of IDs
         list_ids_temp = [self.list_ids[k] for k in indexes]
+
+        print("indexes.size", indexes.size)
+        print("list_ids_temp", list_ids_temp)
 
         # Generate data
         x_data, y_data = self.__data_generation(list_ids_temp)
@@ -178,15 +184,19 @@ class DataGenerator4Regression(keras.utils.Sequence):
         """
 
         # Initialization
-        x_data = np.empty((self.batch_size, *self.dim, self.n_channels))
-        y_data = np.empty((self.batch_size), dtype=int)
+        x_data = np.empty((self.batch_size, *self.dims, self.n_channels))
+        y_data = np.empty((self.batch_size), dtype=float)
 
         # Generate data
         for i, id in enumerate(list_ids_temp):
             # Store sample
-            x_data[i, ] = np.load("data/" + id + ".npy")
+            # x_data[i, ] = np.load("data/" + id + ".npy")
 
-            # Store class
-            y_data[i] = self.labels[id]
+            x_data[i, ] = cv2.imread(id)[:, :, :, np.newaxis]
 
-        return x_data, keras.utils.to_categorical(y_data, num_classes=self.n_classes)
+            # print(id)
+            # print(self.values)
+
+            y_data[i] = self.values[id]
+
+        return x_data, y_data

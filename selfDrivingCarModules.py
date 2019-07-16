@@ -110,7 +110,8 @@ class Sdc:
         limit_counter = 0
 
         for line_segments in csv_lines[1:]:
-            steering_angle = float(line_segments[3])
+            # steering_angle = float(line_segments[3])
+            steering_angle = float(line_segments[6])
 
             if (image_series_type == Sdc.__ALL_IMAGES__):
                 center_image_files.append(data_path + line_segments[0])
@@ -138,12 +139,18 @@ class Sdc:
                 if (limit_counter >= limit):
                     break
 
-        all_image_files = np.concatenate([center_image_files, left_image_files, right_image_files])
+        all_image_files = center_image_files + left_image_files + right_image_files
 
-        x_partitions["train"], x_partitions["validation"], y_partitions["train"], y_partitions["validation"] = \
-            train_test_split(all_image_files, steering_angles, test_size=validation_split, random_state=random_state)
+        # all_image_files = np.concatenate([center_image_files, left_image_files, right_image_files])
+        all_steering_angles = dict(zip(all_image_files, steering_angles))
 
-        return (x_partitions["train"], x_partitions["validation"], y_partitions["train"], y_partitions["validation"])
+        # x_partitions["train"], x_partitions["validation"], y_partitions["train"], y_partitions["validation"] = \
+        #     train_test_split(all_image_files, all_steering_angles, test_size=validation_split, random_state=random_state)
+
+        x_partitions["train"], x_partitions["validation"] = \
+            train_test_split(all_image_files, test_size=validation_split, random_state=random_state)
+
+        return (x_partitions["train"], x_partitions["validation"], all_steering_angles)
 
     @staticmethod
     def dummy():
