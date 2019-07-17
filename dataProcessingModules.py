@@ -153,8 +153,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
         # Find list of IDs
         list_ids_temp = [self.list_ids[k] for k in indexes]
 
-        print("indexes.size", indexes.size)
-        print("list_ids_temp", list_ids_temp)
+        # print("indexes.size", indexes.size)
+        # print("list_ids_temp", list_ids_temp)
 
         # Generate data
         x_data, y_data = self.__data_generation(list_ids_temp)
@@ -184,8 +184,11 @@ class DataGenerator4Regression(keras.utils.Sequence):
         """
 
         # Initialization
-        x_data = np.empty((self.batch_size, *self.dims, self.n_channels))
-        y_data = np.empty((self.batch_size), dtype=float)
+        # x_data = np.empty((self.batch_size, *self.dims, self.n_channels))
+        # y_data = np.empty((self.batch_size), dtype=float)
+
+        x_data = np.empty((len(list_ids_temp), *self.dims, self.n_channels))
+        y_data = np.empty((len(list_ids_temp)), dtype=np.float32)
 
         # Generate data
         for i, id in enumerate(list_ids_temp):

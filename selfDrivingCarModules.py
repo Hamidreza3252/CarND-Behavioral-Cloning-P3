@@ -100,7 +100,7 @@ class Sdc:
                 csv_lines.append(csv_line)
 
         x_partitions = {"train": [], "validation": []}
-        y_partitions = {"train": [], "validation": []}
+        # y_partitions = {"train": [], "validation": []}
 
         center_image_files = []
         left_image_files = []
@@ -110,6 +110,12 @@ class Sdc:
         limit_counter = 0
 
         for line_segments in csv_lines[1:]:
+            if (limit != 0):
+                limit_counter += 1
+
+                if (limit_counter > limit):
+                    break
+
             # steering_angle = float(line_segments[3])
             steering_angle = float(line_segments[6])
 
@@ -132,12 +138,6 @@ class Sdc:
             elif (image_series_type == Sdc.__RIGHT_IMAGES__):
                 right_image_files.append(data_path + line_segments[2])
                 steering_angles.append(steering_angle * right_correction_factor)
-
-            if (limit != 0):
-                limit_counter += 1
-
-                if (limit_counter >= limit):
-                    break
 
         all_image_files = center_image_files + left_image_files + right_image_files
 
