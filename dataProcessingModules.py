@@ -100,7 +100,9 @@ class DataGenerator4Classification(keras.utils.Sequence):
         return x_data, keras.utils.to_categorical(y_data, num_classes=self.n_classes)
 
 
+# class DataGenerator4Regression(keras.utils.Sequence):
 class DataGenerator4Regression(keras.utils.Sequence):
+
     def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True, augment_data=False):
         """
 
@@ -114,6 +116,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
         :param shuffle:
         :param augment_data
         """
+
+        # super().__init__(self)
 
         self.indexes = None
         self.shuffle = True
@@ -190,8 +194,15 @@ class DataGenerator4Regression(keras.utils.Sequence):
         # y_data = np.empty((self.batch_size), dtype=float)
 
         # x_data = np.empty((len(list_ids_temp), *self.dims, self.n_channels))
-        x_data = np.empty((len(list_ids_temp), *self.dims))
-        y_data = np.empty((len(list_ids_temp)), dtype=np.float32)
+
+        batch_length = len(list_ids_temp)
+
+        if (self.augment_data):
+            x_data = np.empty((2 * batch_length, *self.dims))
+            y_data = np.empty((2 * batch_length), dtype=np.float32)
+        else:
+            x_data = np.empty((batch_length, *self.dims))
+            y_data = np.empty((batch_length), dtype=np.float32)
 
         # Generate data
         for i, id in enumerate(list_ids_temp):
@@ -206,8 +217,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
 
             y_data[i] = self.values[id]
 
-            # if (self.augment_data):
-             #   steering_angles.append(steering_angle * -1.0)
-             #   center_images.append(cv2.flip(image, 1))
+            if (self.augment_data):
+                x_data[i + batch_length] = cv2.flip(x_data[i], 1)
+                y_data[i + batch_length] = y_data[i] * -1.0
 
         return x_data, y_data
