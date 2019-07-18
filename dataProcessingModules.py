@@ -101,7 +101,7 @@ class DataGenerator4Classification(keras.utils.Sequence):
 
 
 class DataGenerator4Regression(keras.utils.Sequence):
-    def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True):
+    def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True, augment_data=False):
         """
 
         Initialization:
@@ -112,10 +112,12 @@ class DataGenerator4Regression(keras.utils.Sequence):
         :param dims:
         :param n_channels:
         :param shuffle:
+        :param augment_data
         """
 
         self.indexes = None
         self.shuffle = True
+        self.augment_data = augment_data
 
         self.dims = dims
         self.batch_size = batch_size
@@ -187,7 +189,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
         # x_data = np.empty((self.batch_size, *self.dims, self.n_channels))
         # y_data = np.empty((self.batch_size), dtype=float)
 
-        x_data = np.empty((len(list_ids_temp), *self.dims, self.n_channels))
+        # x_data = np.empty((len(list_ids_temp), *self.dims, self.n_channels))
+        x_data = np.empty((len(list_ids_temp), *self.dims))
         y_data = np.empty((len(list_ids_temp)), dtype=np.float32)
 
         # Generate data
@@ -195,11 +198,16 @@ class DataGenerator4Regression(keras.utils.Sequence):
             # Store sample
             # x_data[i, ] = np.load("data/" + id + ".npy")
 
-            x_data[i, ] = cv2.imread(id)[:, :, :, np.newaxis]
+            # x_data[i, ] = cv2.imread(id)[:, :, :, np.newaxis]
+            x_data[i] = cv2.imread(id)[:, :, :]
 
             # print(id)
             # print(self.values)
 
             y_data[i] = self.values[id]
+
+            # if (self.augment_data):
+             #   steering_angles.append(steering_angle * -1.0)
+             #   center_images.append(cv2.flip(image, 1))
 
         return x_data, y_data
