@@ -117,7 +117,7 @@ class Sdc:
                     break
 
             # steering_angle = float(line_segments[3])
-            steering_angle = float(line_segments[6])
+            steering_angle = float(line_segments[3])
 
             if (image_series_type == Sdc.__ALL_IMAGES__):
                 center_image_files.append(data_path + line_segments[0])
