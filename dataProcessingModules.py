@@ -204,12 +204,17 @@ class DataGenerator4Regression(keras.utils.Sequence):
             x_data = np.empty((batch_length, *self.dims))
             y_data = np.empty((batch_length), dtype=np.float32)
 
+        # print(x_data.shape)
+
         # Generate data
         for i, id in enumerate(list_ids_temp):
             # Store sample
             # x_data[i, ] = np.load("data/" + id + ".npy")
 
             # x_data[i, ] = cv2.imread(id)[:, :, :, np.newaxis]
+
+            # print(id)
+
             x_data[i] = cv2.imread(id)[:, :, :]
 
             # print(id)

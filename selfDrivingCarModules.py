@@ -88,8 +88,8 @@ class Sdc:
 
         image_series_type = kwargs["image_series_type"] if ("image_series_type" in kwargs) else Sdc.__ALL_IMAGES__
         random_state = kwargs["random_state"] if ("random_state" in kwargs) else None
-        left_correction_factor = kwargs["left_correction_factor"] if ("left_correction_factor" in kwargs) else 0.2
-        right_correction_factor = kwargs["right_correction_factor"] if ("right_correction_factor" in kwargs) else -0.2
+        left_correction_factor = kwargs["left_correction_factor"] if ("left_correction_factor" in kwargs) else 0.1
+        right_correction_factor = kwargs["right_correction_factor"] if ("right_correction_factor" in kwargs) else -0.1
 
         csv_lines = []
 
@@ -123,23 +123,25 @@ class Sdc:
                 center_image_files.append(data_path + line_segments[0])
                 steering_angles.append(steering_angle)
 
-                left_image_files.append(data_path + line_segments[1])
-                steering_angles.append(steering_angle * left_correction_factor)
+                left_image_files.append(data_path + line_segments[1][1:])
+                steering_angles.append(steering_angle + left_correction_factor)
 
-                right_image_files.append(data_path + line_segments[2])
-                steering_angles.append(steering_angle * right_correction_factor)
+                right_image_files.append(data_path + line_segments[2][1:])
+                steering_angles.append(steering_angle + right_correction_factor)
             elif (image_series_type == Sdc.__CENTER_IMAGES__):
                 # image_file = data_path + line_segments[0]
                 center_image_files.append(data_path + line_segments[0])
                 steering_angles.append(steering_angle)
             elif (image_series_type == Sdc.__LEFT_IMAGES__):
-                left_image_files.append(data_path + line_segments[1])
-                steering_angles.append(steering_angle * left_correction_factor)
+                left_image_files.append(data_path + line_segments[1][1:])
+                steering_angles.append(steering_angle + left_correction_factor)
             elif (image_series_type == Sdc.__RIGHT_IMAGES__):
-                right_image_files.append(data_path + line_segments[2])
-                steering_angles.append(steering_angle * right_correction_factor)
+                right_image_files.append(data_path + line_segments[2][1:])
+                steering_angles.append(steering_angle + right_correction_factor)
 
         all_image_files = center_image_files + left_image_files + right_image_files
+
+        # print(all_image_files)
 
         # all_image_files = np.concatenate([center_image_files, left_image_files, right_image_files])
         all_steering_angles = dict(zip(all_image_files, steering_angles))
