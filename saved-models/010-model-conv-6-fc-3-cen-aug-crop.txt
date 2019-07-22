@@ -1,0 +1,123 @@
+# correction_factor: 0.15
+
+val_loss:
+[0.08124628335237503,
+ 0.06073758214712143,
+ 0.024728272333741187,
+ 0.018132424131035805,
+ 0.015184524357318879,
+ 0.012812233604490757,
+ 0.012895626127719878,
+ 0.012073612995445729,
+ 0.011885516457259654,
+ 0.011242982670664788,
+ 0.011100615300238132,
+ 0.010869330856949092,
+ 0.011024078149348497,
+ 0.01090902792289853,
+ 0.010864591132849455,
+ 0.010746601419523358,
+ 0.010716215465217829,
+ 0.010773482285439968,
+ 0.010605117976665497,
+ 0.010726960431784392,
+ 0.010748741179704667,
+ 0.01061211597174406,
+ 0.010727316308766603,
+ 0.010504850652068853,
+ 0.01055126952007413,
+ 0.01062263635918498,
+ 0.010225553121417761,
+ 0.010238403938710689,
+ 0.010208951383829117,
+ 0.010188806857913733]
+
+loss:
+[5.208050700426102,
+ 0.52000518232584,
+ 0.3015437217056751,
+ 0.2039976728707552,
+ 0.1499496129155159,
+ 0.11533757217228413,
+ 0.0991141265258193,
+ 0.0828102132305503,
+ 0.06980698972940445,
+ 0.06082999784499407,
+ 0.05481017749756575,
+ 0.04944060653448105,
+ 0.04511730976402759,
+ 0.04202915327623487,
+ 0.038736542314291,
+ 0.03722922198474407,
+ 0.03451123017817736,
+ 0.03338958412408829,
+ 0.033081156648695466,
+ 0.031028309389948844,
+ 0.029123808294534682,
+ 0.028650818392634392,
+ 0.027874083165079354,
+ 0.02665796988643706,
+ 0.026179039888083934,
+ 0.0253981722984463,
+ 0.02364546975120902,
+ 0.0242307819519192,
+ 0.02289258365519345,
+ 0.023551526023074986]
+
+
+# ==========================================================================================
+
+
+model = Sequential()
+
+model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=input_shape))
+
+model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=input_shape))
+
+model.add(Conv2D(16, (5, 5), strides=(1, 1), name="conv_layer_01", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_01"))
+
+model.add(Conv2D(32, (3, 3), strides=(1, 1), name="conv_layer_02", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_2"))
+
+model.add(Conv2D(32, (3, 3), strides=(1, 1), name="conv_layer_03", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_3"))
+
+model.add(Conv2D(64, (3, 3), strides=(1, 1), name="conv_layer_04", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_4"))
+
+model.add(Conv2D(64, (3, 3), strides=(1, 1), name="conv_layer_05", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_5"))
+
+model.add(Conv2D(128, (1, 1), strides=(1, 1), name="conv_layer_06", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_6"))
+
+model.add(Flatten())
+
+model.add(Dense(128, activation=None, name="fc1"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(64, activation=None, name="fc2"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(32, activation=None, name="fc3"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(1, activation=None, name="fc4"))
+
+# x = Dense(labelCategoriesCount, activation="softmax", name="fc3")(x)
+# model = Model(inputs=input_ph, outputs=k_layer, name="estimate_steering")
+
+model.summary()
