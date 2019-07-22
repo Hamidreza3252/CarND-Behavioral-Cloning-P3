@@ -1,0 +1,70 @@
+correction_factor: 0.40
+
+val_loss:
+[0.12512056827545165,
+ 0.1226702888806661,
+ 0.12192084779342016,
+ 0.1217026337981224,
+ 0.12160825202862421]
+
+loss:
+[0.3050401299894846,
+ 0.141678038328589,
+ 0.13251719297067668,
+ 0.12945694273393415,
+ 0.12797709371263402]
+
+
+# ==========================================================================================
+
+
+model = Sequential()
+model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=input_shape))
+
+model.add(Conv2D(16, (5, 5), strides=(1, 1), name="conv_layer_01", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_01"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_02", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_2"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_03", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_3"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_04", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_4"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_05", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_5"))
+
+model.add(Conv2D(32, (1, 1), strides=(1, 1), name="conv_layer_06", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_6"))
+
+model.add(Flatten())
+
+# model.add(Dense(64, activation=None, name="fc1"))
+# model.add(Dropout(rate=0.25))
+
+model.add(Dense(32, activation=None, name="fc2"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(16, activation=None, name="fc3"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(1, activation=None, name="fc4"))
+
+# x = Dense(labelCategoriesCount, activation="softmax", name="fc3")(x)
+# model = Model(inputs=input_ph, outputs=k_layer, name="estimate_steering")
+
+model.summary()

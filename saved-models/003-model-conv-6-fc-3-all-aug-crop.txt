@@ -1,0 +1,80 @@
+correction_factor: 0.20
+
+val_loss:
+[0.07913445889949798,
+ 0.04949811826149623,
+ 0.045475131024916966,
+ 0.044197222168246904,
+ 0.043542254293958346,
+ 0.04315875455737114,
+ 0.043078765322764716,
+ 0.043008312086264294,
+ 0.04276535920798778,
+ 0.04301012230416139]
+
+loss:
+[0.9705091379706646,
+ 0.12222462645004754,
+ 0.07406777882348263,
+ 0.05942261267292539,
+ 0.053677038880578704,
+ 0.05026062774747313,
+ 0.04873836808451188,
+ 0.04771434028085284,
+ 0.046997734391907124,
+ 0.04651621295962223]
+
+
+# ==========================================================================================
+
+
+model = Sequential()
+model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=input_shape))
+
+model.add(Conv2D(16, (5, 5), strides=(1, 1), name="conv_layer_01", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_01"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_02", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_2"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_03", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_3"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_04", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_4"))
+
+model.add(Conv2D(16, (3, 3), strides=(1, 1), name="conv_layer_05", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_5"))
+
+model.add(Conv2D(32, (1, 1), strides=(1, 1), name="conv_layer_06", padding="same"))
+model.add(BatchNormalization())
+model.add(Activation("relu"))
+model.add(MaxPooling2D((2, 2), name="max_pool_6"))
+
+model.add(Flatten())
+
+# model.add(Dense(64, activation=None, name="fc1"))
+# model.add(Dropout(rate=0.25))
+
+model.add(Dense(32, activation=None, name="fc2"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(16, activation=None, name="fc3"))
+model.add(Dropout(rate=0.25))
+
+model.add(Dense(1, activation=None, name="fc4"))
+
+# x = Dense(labelCategoriesCount, activation="softmax", name="fc3")(x)
+# model = Model(inputs=input_ph, outputs=k_layer, name="estimate_steering")
+
+model.summary()
