@@ -101,9 +101,7 @@ class Sdc:
         x_partitions = {"train": [], "validation": []}
         # y_partitions = {"train": [], "validation": []}
 
-        center_image_files = []
-        left_image_files = []
-        right_image_files = []
+        image_files = []
         steering_angles = []
 
         limit_counter = 0
@@ -119,37 +117,34 @@ class Sdc:
             steering_angle = float(line_segments[3])
 
             if (image_series_type == Sdc.__ALL_IMAGES__):
-                center_image_files.append(data_path + line_segments[0])
-                steering_angles.append(steering_angle)
+                center_image_file = data_path + line_segments[0]
+                left_image_file = data_path + line_segments[1][1:]
+                right_image_file = data_path + line_segments[2][1:]
 
-                left_image_files.append(data_path + line_segments[1][1:])
-                steering_angles.append(steering_angle + correction_factor)
+                image_files.extend([center_image_file, left_image_file, right_image_file])
+                steering_angles.extend([steering_angle, steering_angle + correction_factor, steering_angle - correction_factor])
 
-                right_image_files.append(data_path + line_segments[2][1:])
-                steering_angles.append(steering_angle - correction_factor)
             elif (image_series_type == Sdc.__CENTER_IMAGES__):
                 # image_file = data_path + line_segments[0]
-                center_image_files.append(data_path + line_segments[0])
+                image_files.append(data_path + line_segments[0])
                 steering_angles.append(steering_angle)
             elif (image_series_type == Sdc.__LEFT_IMAGES__):
-                left_image_files.append(data_path + line_segments[1][1:])
+                image_files.append(data_path + line_segments[1][1:])
                 steering_angles.append(steering_angle + correction_factor)
             elif (image_series_type == Sdc.__RIGHT_IMAGES__):
-                right_image_files.append(data_path + line_segments[2][1:])
+                image_files.append(data_path + line_segments[2][1:])
                 steering_angles.append(steering_angle - correction_factor)
-
-        all_image_files = center_image_files + left_image_files + right_image_files
 
         # print(all_image_files)
 
         # all_image_files = np.concatenate([center_image_files, left_image_files, right_image_files])
-        all_steering_angles = dict(zip(all_image_files, steering_angles))
+        all_steering_angles = dict(zip(image_files, steering_angles))
 
         # x_partitions["train"], x_partitions["validation"], y_partitions["train"], y_partitions["validation"] = \
         #     train_test_split(all_image_files, all_steering_angles, test_size=validation_split, random_state=random_state)
 
         x_partitions["train"], x_partitions["validation"] = \
-            train_test_split(all_image_files, test_size=validation_split, random_state=random_state)
+            train_test_split(image_files, test_size=validation_split, random_state=random_state)
 
         return (x_partitions["train"], x_partitions["validation"], all_steering_angles)
 
