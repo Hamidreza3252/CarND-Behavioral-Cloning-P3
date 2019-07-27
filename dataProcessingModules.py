@@ -216,6 +216,7 @@ class DataGenerator4Regression(keras.utils.Sequence):
             # print(id)
 
             x_data[i] = cv2.imread(id)[:, :, :]
+            x_data[i] = cv2.cvtColor(x_data[i], cv2.COLOR_BGR2RGB)
 
             # print(id)
             # print(self.values)
