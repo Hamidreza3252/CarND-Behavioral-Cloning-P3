@@ -103,7 +103,7 @@ class DataGenerator4Classification(keras.utils.Sequence):
 # class DataGenerator4Regression(keras.utils.Sequence):
 class DataGenerator4Regression(keras.utils.Sequence):
 
-    def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True, augment_data=False):
+    def __init__(self, list_ids, values, batch_size=32, dims=(32, 32, 3), n_channels=1, shuffle=True, rescale_zero_mean=False, augment_data=False):
         """
 
         Initialization:
@@ -129,6 +129,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
         self.list_ids = list_ids
         self.n_channels = n_channels
         self.shuffle = shuffle
+        self.rescale_zero_mean = rescale_zero_mean
+
         self.on_epoch_end()
 
     def __len__(self):
@@ -140,6 +142,14 @@ class DataGenerator4Regression(keras.utils.Sequence):
         """
 
         return int(np.floor(len(self.list_ids) / self.batch_size))
+
+    @staticmethod
+    def preprocess_rescale_zero_mean(x):
+        y = x / 255.0
+        y -= 0.5
+        y *= 2.0
+
+        return y
 
     def __getitem__(self, index):
         """
@@ -198,10 +208,10 @@ class DataGenerator4Regression(keras.utils.Sequence):
         batch_length = len(list_ids_temp)
 
         if (self.augment_data):
-            x_data = np.empty((2 * batch_length, *self.dims))
+            x_data = np.empty((2 * batch_length, *self.dims), dtype=np.uint8)
             y_data = np.empty((2 * batch_length), dtype=np.float32)
         else:
-            x_data = np.empty((batch_length, *self.dims))
+            x_data = np.empty((batch_length, *self.dims), dtype=np.uint8)
             y_data = np.empty((batch_length), dtype=np.float32)
 
         # print(x_data.shape)
@@ -215,7 +225,7 @@ class DataGenerator4Regression(keras.utils.Sequence):
 
             # print(id)
 
-            x_data[i] = cv2.imread(id)[:, :, :]
+            x_data[i] = cv2.imread(id)  # [:, :, :]
             x_data[i] = cv2.cvtColor(x_data[i], cv2.COLOR_BGR2RGB)
 
             # print(id)
@@ -227,4 +237,9 @@ class DataGenerator4Regression(keras.utils.Sequence):
                 x_data[i + batch_length] = cv2.flip(x_data[i], 1)
                 y_data[i + batch_length] = y_data[i] * -1.0
 
-        return x_data, y_data
+        if (self.rescale_zero_mean):
+            scaled_x_data = DataGenerator4Regression.preprocess_rescale_zero_mean(x_data)
+
+            return scaled_x_data, y_data
+        else:
+            return x_data, y_data
