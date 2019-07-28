@@ -14,6 +14,7 @@ import shutil
 import matplotlib.pyplot as plt
 import math
 from sklearn import metrics
+# from keras.applications.resnet50 import preprocess_input, decode_predictions
 
 
 class Sdc:

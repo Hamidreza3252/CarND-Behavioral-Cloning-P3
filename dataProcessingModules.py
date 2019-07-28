@@ -145,11 +145,16 @@ class DataGenerator4Regression(keras.utils.Sequence):
 
     @staticmethod
     def preprocess_rescale_zero_mean(x):
-        y = x / 255.0
-        y -= 0.5
-        y *= 2.0
+        y = x / 127.5
+        y -= 1.0
 
         return y
+
+        # y = x / 255.0
+        # y -= 0.5
+        # y *= 2.0
+
+        # return y
 
     def __getitem__(self, index):
         """
