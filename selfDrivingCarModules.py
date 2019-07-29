@@ -16,6 +16,16 @@ import math
 from sklearn import metrics
 # from keras.applications.resnet50 import preprocess_input, decode_predictions
 
+from keras.layers import Input, InputLayer, Dense, Activation, ZeroPadding2D, BatchNormalization, Flatten, Conv2D
+from keras.layers import AveragePooling2D, MaxPooling2D, Dropout, Lambda, Cropping2D
+from keras.models import Sequential, Model
+from keras.optimizers import SGD
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler
+import keras
+from keras import backend as K
+from keras.preprocessing import image
+from keras.callbacks import EarlyStopping
+
 
 class Sdc:
 
@@ -152,3 +162,64 @@ class Sdc:
     @staticmethod
     def dummy():
         raise NotImplementedError
+
+    @staticmethod
+    def generate_model(model_identifier, image_sizes):
+
+        if (str.lower(model_identifier) == "cnn-01"):
+            model = Sequential()
+
+            model.add(Cropping2D(cropping=((50, 20), (0, 0)), input_shape=(*image_sizes, 3)))
+
+            model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(*image_sizes, 3)))
+
+            model.add(Conv2D(16, (5, 5), strides=(1, 1), name="conv_layer_01", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_01"))
+
+            model.add(Conv2D(32, (3, 3), strides=(1, 1), name="conv_layer_02", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_2"))
+
+            model.add(Conv2D(32, (3, 3), strides=(1, 1), name="conv_layer_03", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_3"))
+
+            model.add(Conv2D(64, (3, 3), strides=(1, 1), name="conv_layer_04", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_4"))
+
+            model.add(Conv2D(64, (3, 3), strides=(1, 1), name="conv_layer_05", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_5"))
+
+            model.add(Conv2D(128, (1, 1), strides=(1, 1), name="conv_layer_06", padding="same"))
+            model.add(BatchNormalization())
+            model.add(Activation("relu"))
+            model.add(MaxPooling2D((2, 2), name="max_pool_6"))
+
+            model.add(Flatten())
+
+            model.add(Dense(128, activation=None, name="fc1"))
+            model.add(Dropout(rate=0.25))
+
+            model.add(Dense(64, activation=None, name="fc2"))
+            model.add(Dropout(rate=0.25))
+
+            model.add(Dense(32, activation=None, name="fc3"))
+            model.add(Dropout(rate=0.25))
+
+            model.add(Dense(1, activation=None, name="fc4"))
+
+            # x = Dense(labelCategoriesCount, activation="softmax", name="fc3")(x)
+            # model = Model(inputs=input_ph, outputs=k_layer, name="estimate_steering")
+
+            return model
+        else:
+            raise Exception("No valid model identifier was given.")
+
