@@ -164,14 +164,15 @@ class Sdc:
         raise NotImplementedError
 
     @staticmethod
-    def generate_model(model_identifier, image_sizes):
+    def generate_model(model_identifier, image_sizes, rescale_input_zero_mean):
 
         if (str.lower(model_identifier) == "cnn-01"):
             model = Sequential()
 
             model.add(Cropping2D(cropping=((50, 20), (0, 0)), input_shape=(*image_sizes, 3)))
 
-            model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(*image_sizes, 3)))
+            if (rescale_input_zero_mean):
+                model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(*image_sizes, 3)))
 
             model.add(Conv2D(16, (5, 5), strides=(1, 1), name="conv_layer_01", padding="same"))
             model.add(BatchNormalization())
