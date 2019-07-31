@@ -196,8 +196,8 @@ class DataGenerator4Regression(keras.utils.Sequence):
         if (self.shuffle == True):
             np.random.shuffle(self.indexes)
 
-        print("slepping for 2 mins to cool down...")
-        time.sleep(2*60)
+        # print("slepping for 2 mins to cool down...")
+        # time.sleep(2*60)
 
     def __data_generation(self, list_ids_temp):
         """

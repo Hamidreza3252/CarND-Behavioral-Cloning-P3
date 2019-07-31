@@ -224,3 +224,47 @@ class Sdc:
         else:
             raise Exception("No valid model identifier was given.")
 
+    @staticmethod
+    def plot_model_history(training_loss, validation_loss, title, plot_file_name=""):
+        n_epochs = range(1, len(training_loss) + 1)
+
+        fig, axes = plt.subplots(nrows=1, ncols=2)
+
+        for n_plot, axis in enumerate(axes):
+            # axis = axes[0]
+            axis.plot(n_epochs, training_loss, color="red", label="Training loss")
+            axis.plot(n_epochs, validation_loss, color="green", label="Validation loss")
+
+            # for axis in axes:
+            axis.legend(loc=1, fontsize="x-large")
+
+            axis.set_title(title, fontsize="x-large")
+            axis.set_xlabel("Epochs", fontsize=15)
+            # axis.xlabel("Epochs", fontsize=18)
+
+            gridlines = axis.get_xgridlines() + axis.get_ygridlines()
+            ticklabels = axis.get_xticklabels() + axis.get_yticklabels()
+
+            for line in gridlines:
+                line.set_linestyle('-.')
+
+            for label in ticklabels:
+                label.set_color("b")
+                label.set_fontsize(13)
+
+            axis.grid(b=True, which="both", alpha=1.0)
+
+            if (n_plot == 1):
+                axis.set_yscale("log")
+
+        fig.set_figheight(5)
+        fig.set_figwidth(15)
+        fig.tight_layout()
+
+        if (plot_file_name != None or plot_file_name != ""):
+            plt.savefig(plot_file_name, bbox_inches="tight")
+
+        plt.show()
+
+
+
