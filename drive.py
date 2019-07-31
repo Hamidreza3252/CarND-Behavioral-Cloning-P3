@@ -18,6 +18,8 @@ from keras import __version__ as keras_version
 
 import tensorflow as tf
 
+from dataProcessingModules import DataGenerator4Regression
+
 sio = socketio.Server()
 app = Flask(__name__)
 model = None
@@ -63,6 +65,10 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
         image_array = np.asarray(image)
+
+        # Added by Hamid
+        image_array = DataGenerator4Regression.preprocess_rescale_zero_mean(image_array)
+
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
 
         throttle = controller.update(float(speed))
