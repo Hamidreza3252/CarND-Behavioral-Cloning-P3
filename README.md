@@ -1,7 +1,7 @@
 # Behavioral Cloning 
 
 
-This repository contains starting files for the Behavioral Cloning Project.  
+This repository contains a detailed example of behavioral cloning in self-driving cars, a deep learning approach.   
 
 
 ## 0. Executive Summary  
