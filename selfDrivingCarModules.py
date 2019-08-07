@@ -238,8 +238,7 @@ class Sdc:
             # for axis in axes:
             axis.legend(loc=1, fontsize="x-large")
 
-            axis.set_title(title, fontsize="x-large")
-            axis.set_xlabel("Epochs", fontsize=15)
+            axis.set_xlabel("Epochs", fontsize=13)
             # axis.xlabel("Epochs", fontsize=18)
 
             gridlines = axis.get_xgridlines() + axis.get_ygridlines()
@@ -250,11 +249,13 @@ class Sdc:
 
             for label in ticklabels:
                 label.set_color("b")
-                label.set_fontsize(13)
+                label.set_fontsize(11)
 
             axis.grid(b=True, which="both", alpha=1.0)
 
-            if (n_plot == 1):
+            if (n_plot == 0):
+                axis.set_title(title, fontsize="large")
+            else:
                 axis.set_yscale("log")
 
         fig.set_figheight(5)
