@@ -9,16 +9,16 @@ This repository contains starting files for the Behavioral Cloning Project.
 Two sets of ConvNet models are used to train ConvNet models to predict steering angle of a simulated car. The first model, which is reletively small, uses a customized arcitecture, whereas the second one is built based on InceptionV3. The training data are simply the scenary, which is collected by the three cameras (left, right, and center) located at the top of the simulated car. To further augment / double training data, we flipped the captured images, with negavtive captured steering angle.  
   
 The results were improved as we learned how to better utilize the data and how to use more advanced and bigger models. Based on track-1 (lake track) simulations, the performance of the models are qualitatively sorted as follows (from the best to the worst):  
-1. Partial Transfer Learning: Training the Model Based on Inception Architecture, but Trainable Weights (2-3)  
-- Training Model Using Already-Provided and Newly Simulated Training Data (3)  
-- Training based on all - left, right, and center - camera images using already-provided data (2-1-3)  
-- Training based on center camera images using already-provided data (2-1-2)  
-- Full Transfer Learning: Training a CNN Model Based on Inception Architecture and Frozen Weights (2-2)  
+1. Partial Transfer Learning: Training the Model Based on Inception Architecture, but Trainable Weights (100% successful, section 2-3)  
+2. Training Model Using Already-Provided and Newly Simulated Training Data (90% successful, 3)  
+3. Training based on all - left, right, and center - camera images using already-provided data (section 2-1-3)  
+4. Training based on center camera images using already-provided data (section 2-1-2)  
+5. Full Transfer Learning: Training a CNN Model Based on Inception Architecture and Frozen Weights (section 2-2)  
 
 Based on the experience and results of track-1, I trained two models for the second track (jungle track) two ways:  
    
 1. Using the data collected only from track-2  
-- Using the combined data, track-1 and 2 together. 
+2. Using the combined data, track-1 and 2 together. 
 
 The video of autonomous driving for both results are discussed in the following sections, providing the detals of the procedure to train the models and obtain the results.   
 
@@ -191,7 +191,7 @@ The full transfer learning model is based on the InceptionV3 model. I dropped th
     ```python
     layer_output = GlobalAveragePooling2D()(inception_output)
     ```
-- Four (4) subsequent FC layers consists of the following structure:  
+2. Four (4) subsequent FC layers consists of the following structure:  
     - FC Layer-1: Number of Parameters=128
     - FC Layer-2: Number of Parameters=64
     - FC Layer-3: Number of Parameters=32
@@ -290,10 +290,10 @@ Let's take a closer look at the screenshot of the car failure moment, as shown b
   
 - The performance of the models can be qualitatively sorted as follows (from the best to the worst):  
   1. Partial Transfer Learning: Training the Model Based on Inception Architecture, but Trainable Weights (2-3)  
-  - Training Model Using Already-Provided and Newly Simulated Training Data (3)  
-  - Training based on all - left, right, and center - camera images using already-provided data (2-1-3)  
-  - Training based on center camera images using already-provided data (2-1-2)  
-  - Full Transfer Learning: Training a CNN Model Based on Inception Architecture and Frozen Weights (2-2)  
+  2. Training Model Using Already-Provided and Newly Simulated Training Data (3)  
+  3. Training based on all - left, right, and center - camera images using already-provided data (2-1-3)  
+  4. Training based on center camera images using already-provided data (2-1-2)  
+  5. Full Transfer Learning: Training a CNN Model Based on Inception Architecture and Frozen Weights (2-2)  
   
   
 - To collect more training data, one may not need to fully drive around the track. Identifying where the car fails to predict the steering angle would significantly simplify the process. For example, in this project, I noticed that the car would potentially fail at sharp turns, because, sharp truns consist only minor portion of the data, however, they are important to consider. In other words, an important portion of the data set - sharp turns in this example - may not have good enough number of data to support training of those portions.  
