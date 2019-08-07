@@ -6,7 +6,7 @@ This repository contains starting files for the Behavioral Cloning Project.
 
 ## 0. Executive Summary  
 
-Two sets of ConvNet models are used to train ConvNet models to predict steering angle of a simulated car. The first model, which is reletively small, uses a customized arcitecture, whereas the second one is built based on InceptionV3. The training data are simply the scenary, which is collected by the three cameras (left, right, and center) located at the top of the simulated car. To further augment / double training data, we flipped the captured images, with negavtive captured steering angle.  
+Two sets of ConvNet models are used to train ConvNet models to predict steering angle of a simulated car. The first model, which is reletively small, uses a customized architecture, whereas the second one is built based on InceptionV3. The training data are simply the scenary, which is collected by the three cameras (left, right, and center) located at the top of the simulated car. To further augment / double training data, we flipped the captured images, with negavtive captured steering angle.  
   
 The results were improved as we learned how to better utilize the data and how to use more advanced and bigger models. Based on track-1 (lake track) simulations, the performance of the models are qualitatively sorted as follows (from the best to the worst):  
 1. Partial Transfer Learning: Training the Model Based on Inception Architecture, but Trainable Weights (100% successful, section 2-3)  
