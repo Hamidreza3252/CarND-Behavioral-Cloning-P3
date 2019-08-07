@@ -42,8 +42,7 @@ The lab enviroment can be created with CarND Term1 Starter Kit. Click [here](htt
 
 The following resources can be found in this github repository:
 * drive.py
-* video.py
-* writeup_template.md
+* video.py (this method can be used to create a video from the center camera. But I used Windows 10 Game Bar instead to capture the veideos. If one likes to make the videos the same way as I did, I recommend to use two PCs, one running unity and video capture, and the other one - preferably with Nvidia GPU - running the model. Otherwise, the car may be deviated off the road due to latency in updating the steering angle)
 
 The simulator can be downloaded from the classroom. In the classroom, we have also provided sample data that you can optionally use to help train your model.
 
